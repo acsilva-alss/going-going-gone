@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste WebSocket</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Teste de WebSocket</h1>
+    <button onclick="connect()">Conectar</button>
+    <button onclick="joinRoom()">Entrar na Sala</button>
+    <button onclick="sendBid()">Enviar Mensagem</button>
+
+    <script>
+        let socket;
+
+        function connect() {
+            socket = io("ws://localhost:3000", { transports: ["websocket"] });
+
+            socket.on("connect", () => console.log("✅ Conectado! ID:", socket.id));
+            socket.on("disconnect", () => console.log("❌ Desconectado"));
+            socket.on("joinedRoom", (room) => console.log("Entrou na sala:", room));
+            socket.on("newMessage", (msg) => console.log("📩 Nova mensagem:", msg));
+        }
+
+        function joinRoom() {
+            socket.emit("joinRoom", "sala1");
+        }
+
+        function sendBid() {
+            socket.emit("placeBid", { room: "sala1", message: 100 });
+        }
+    </script>
+</body>
+</html>
